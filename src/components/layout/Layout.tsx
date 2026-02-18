@@ -26,8 +26,7 @@ export default function Layout() {
         { name: 'My Tickets', path: '/my-tickets', icon: Ticket },
     ];
 
-    // Make Settings available for everyone so they can update their profile
-    navItems.push({ name: 'Settings', path: '/settings', icon: Settings });
+    // Link to Settings is handled in the footer now
 
     const isBoardPage = location.pathname === '/';
 
@@ -36,8 +35,7 @@ export default function Layout() {
             {/* Sidebar for Desktop */}
             <aside className="hidden md:flex flex-col w-64 bg-black border-r border-gray-800">
                 <div className="p-8 border-b border-gray-800">
-                    <h1 className="text-2xl font-bold text-white">Ops Board</h1>
-                    <p className="text-sm text-gray-400 mt-1">Store Operations</p>
+                    <span className="block text-2xl font-bold font-[family-name:--font-for-five] tracking-tighter text-white">FOR FIVE</span>
                     {/* OPTIONAL: Show user name here if desired, or just rely on Settings page */}
                 </div>
 
@@ -61,10 +59,24 @@ export default function Layout() {
                     ))}
                 </nav>
 
-                <div className="p-4 border-t border-gray-800">
+                <div className="p-4 border-t border-gray-800 space-y-2">
+                    <NavLink
+                        to="/settings"
+                        className={({ isActive }) =>
+                            clsx(
+                                'flex items-center px-4 py-2 text-sm font-medium transition-colors rounded-md',
+                                isActive
+                                    ? 'bg-white text-black'
+                                    : 'text-gray-400 hover:bg-gray-900 hover:text-white'
+                            )
+                        }
+                    >
+                        <Settings className="w-5 h-5 mr-3" />
+                        Settings
+                    </NavLink>
                     <button
                         onClick={handleSignOut}
-                        className="flex items-center w-full px-4 py-2 text-sm font-medium text-red-500 hover:bg-gray-900 transition-colors"
+                        className="flex items-center w-full px-4 py-2 text-sm font-medium text-rose-600 hover:bg-rose-950/30 hover:text-rose-500 transition-colors rounded-md"
                     >
                         <LogOut className="w-5 h-5 mr-3" />
                         Sign Out
@@ -74,9 +86,9 @@ export default function Layout() {
 
             {/* Mobile Header & Menu */}
             <div className="flex flex-col flex-1 overflow-hidden relative">
-                {/* Simplified Header - just Title */}
-                <header className="md:hidden flex items-center justify-center p-4 bg-black text-white border-b border-gray-800 shrink-0">
-                    <h1 className="text-lg font-bold">Ops Board</h1>
+                {/* Simplify Header - Title & Logo */}
+                <header className="md:hidden flex items-center justify-between p-4 bg-black text-white border-b border-gray-800 shrink-0">
+                    <span className="text-xl font-bold font-[family-name:--font-for-five] tracking-tighter">FOR FIVE</span>
                 </header>
 
                 {/* Mobile Navigation Dropdown - Slide up from bottom since trigger is at bottom */}

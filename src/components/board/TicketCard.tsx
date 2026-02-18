@@ -22,15 +22,15 @@ interface TicketCardProps {
 
 export default function TicketCard({ ticket, onClick }: TicketCardProps) {
     const priorityColor = {
-        low: 'bg-gray-100 text-gray-600 border-gray-200',
-        medium: 'bg-gray-100 text-gray-900 border-gray-300',
-        high: 'bg-black text-white border-black',
+        low: 'bg-blue-100 text-blue-800 border-blue-200',
+        medium: 'bg-yellow-100 text-yellow-800 border-yellow-200',
+        high: 'bg-red-100 text-red-800 border-red-200',
     }[ticket.priority];
 
     return (
         <div
             onClick={() => onClick(ticket)}
-            className="bg-white p-4 shadow-sm border border-gray-100 hover:shadow-md transition-shadow cursor-pointer group"
+            className="bg-white p-4 shadow-sm border border-gray-100 hover:shadow-md transition-shadow cursor-pointer group rounded-none md:rounded-md"
         >
             <div className="flex justify-between items-start mb-2">
                 <span className={`px-2 py-0.5 text-xs font-semibold uppercase tracking-wide border ${priorityColor}`}>
