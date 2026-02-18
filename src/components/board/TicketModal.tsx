@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { X, Trash2 } from 'lucide-react';
+import { X, Trash2, ChevronDown } from 'lucide-react';
 import { supabase } from '../../lib/supabase';
 import { useAuth } from '../../context/AuthContext';
 import type { Ticket } from './TicketCard';
@@ -126,7 +126,7 @@ export default function TicketModal({ ticket, isOpen, onClose, onTicketUpdated }
 
     return (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
-            <div className="bg-white rounded-xl shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-hidden flex flex-col">
+            <div className="bg-white shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-hidden flex flex-col">
                 {/* Header */}
                 <div className="px-6 py-4 border-b border-gray-100 flex justify-between items-center bg-gray-50">
                     <div>
@@ -155,51 +155,60 @@ export default function TicketModal({ ticket, isOpen, onClose, onTicketUpdated }
                                     required
                                     value={title}
                                     onChange={(e) => setTitle(e.target.value)}
-                                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-black outline-none"
+                                    className="w-full px-3 py-2 border border-gray-300 focus:ring-2 focus:ring-black outline-none"
                                     placeholder="e.g., POS System Offline"
                                 />
                             </div>
 
                             <div>
                                 <label className="block text-sm font-medium text-gray-700 mb-1">Store</label>
-                                <select
-                                    required
-                                    value={storeId}
-                                    onChange={(e) => setStoreId(e.target.value)}
-                                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-black outline-none bg-white"
-                                >
-                                    <option value="">Select a store</option>
-                                    {stores.map((s) => (
-                                        <option key={s.id} value={s.id}>{s.name}</option>
-                                    ))}
-                                </select>
+                                <div className="relative">
+                                    <select
+                                        required
+                                        value={storeId}
+                                        onChange={(e) => setStoreId(e.target.value)}
+                                        className="w-full px-3 py-2 border border-gray-300 focus:ring-2 focus:ring-black outline-none bg-white appearance-none pr-10"
+                                    >
+                                        <option value="">Select a store</option>
+                                        {stores.map((s) => (
+                                            <option key={s.id} value={s.id}>{s.name}</option>
+                                        ))}
+                                    </select>
+                                    <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500 pointer-events-none" />
+                                </div>
                             </div>
 
                             <div>
                                 <label className="block text-sm font-medium text-gray-700 mb-1">Priority</label>
-                                <select
-                                    value={priority}
-                                    onChange={(e) => setPriority(e.target.value as any)}
-                                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-black outline-none bg-white"
-                                >
-                                    <option value="low">Low</option>
-                                    <option value="medium">Medium</option>
-                                    <option value="high">High</option>
-                                </select>
+                                <div className="relative">
+                                    <select
+                                        value={priority}
+                                        onChange={(e) => setPriority(e.target.value as any)}
+                                        className="w-full px-3 py-2 border border-gray-300 focus:ring-2 focus:ring-black outline-none bg-white appearance-none pr-10"
+                                    >
+                                        <option value="low">Low</option>
+                                        <option value="medium">Medium</option>
+                                        <option value="high">High</option>
+                                    </select>
+                                    <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500 pointer-events-none" />
+                                </div>
                             </div>
 
                             {role === 'ops' && ticket && (
                                 <div>
                                     <label className="block text-sm font-medium text-gray-700 mb-1">Status</label>
-                                    <select
-                                        value={status}
-                                        onChange={(e) => setStatus(e.target.value as any)}
-                                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-black outline-none bg-white"
-                                    >
-                                        <option value="pending">Pending</option>
-                                        <option value="in-progress">In Progress</option>
-                                        <option value="resolved">Resolved</option>
-                                    </select>
+                                    <div className="relative">
+                                        <select
+                                            value={status}
+                                            onChange={(e) => setStatus(e.target.value as any)}
+                                            className="w-full px-3 py-2 border border-gray-300 focus:ring-2 focus:ring-black outline-none bg-white appearance-none pr-10"
+                                        >
+                                            <option value="pending">Pending</option>
+                                            <option value="in-progress">In Progress</option>
+                                            <option value="resolved">Resolved</option>
+                                        </select>
+                                        <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500 pointer-events-none" />
+                                    </div>
                                 </div>
                             )}
 
@@ -210,7 +219,7 @@ export default function TicketModal({ ticket, isOpen, onClose, onTicketUpdated }
                                     rows={4}
                                     value={description}
                                     onChange={(e) => setDescription(e.target.value)}
-                                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-black outline-none resize-none"
+                                    className="w-full px-3 py-2 border border-gray-300 focus:ring-2 focus:ring-black outline-none resize-none"
                                     placeholder="Detailed description of the issue..."
                                 />
                             </div>
@@ -244,7 +253,7 @@ export default function TicketModal({ ticket, isOpen, onClose, onTicketUpdated }
                         <button
                             type="button"
                             onClick={onClose}
-                            className="px-4 py-2 text-gray-700 font-medium hover:bg-gray-100 rounded-lg"
+                            className="px-4 py-2 text-gray-700 font-medium hover:bg-gray-100"
                         >
                             Cancel
                         </button>
@@ -252,7 +261,7 @@ export default function TicketModal({ ticket, isOpen, onClose, onTicketUpdated }
                             type="submit"
                             form="ticket-form"
                             disabled={loading}
-                            className="px-6 py-2 bg-black text-white font-medium rounded-lg hover:bg-gray-800 shadow-sm disabled:opacity-50"
+                            className="px-6 py-2 bg-black text-white font-medium hover:bg-gray-800 shadow-sm disabled:opacity-50"
                         >
                             {loading ? 'Saving...' : ticket ? 'Update Ticket' : 'Create Ticket'}
                         </button>

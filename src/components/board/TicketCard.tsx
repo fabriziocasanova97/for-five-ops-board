@@ -30,10 +30,10 @@ export default function TicketCard({ ticket, onClick }: TicketCardProps) {
     return (
         <div
             onClick={() => onClick(ticket)}
-            className="bg-white p-4 rounded-lg shadow-sm border border-gray-100 hover:shadow-md transition-shadow cursor-pointer group"
+            className="bg-white p-4 shadow-sm border border-gray-100 hover:shadow-md transition-shadow cursor-pointer group"
         >
             <div className="flex justify-between items-start mb-2">
-                <span className={`px-2 py-0.5 rounded text-xs font-semibold uppercase tracking-wide border ${priorityColor}`}>
+                <span className={`px-2 py-0.5 text-xs font-semibold uppercase tracking-wide border ${priorityColor}`}>
                     {ticket.priority}
                 </span>
                 {ticket.status !== 'pending' && (

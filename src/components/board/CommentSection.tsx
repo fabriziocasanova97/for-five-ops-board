@@ -139,8 +139,8 @@ export default function CommentSection({ ticketId }: CommentSectionProps) {
     };
 
     return (
-        <div className="flex flex-col h-[400px] bg-gray-50 rounded-lg border border-gray-200">
-            <div className="p-4 border-b border-gray-200 bg-white rounded-t-lg">
+        <div className="flex flex-col h-[400px] bg-gray-50 border border-gray-200">
+            <div className="p-4 border-b border-gray-200 bg-white">
                 <h4 className="font-semibold text-gray-800">Comments</h4>
             </div>
 
@@ -156,12 +156,12 @@ export default function CommentSection({ ticketId }: CommentSectionProps) {
                             className={`flex gap-3 ${comment.user_id === user?.id ? 'flex-row-reverse' : ''}`}
                         >
                             <div className="flex-shrink-0">
-                                <div className="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center text-blue-600">
+                                <div className="w-8 h-8 bg-blue-100 flex items-center justify-center text-blue-600">
                                     <UserIcon size={14} />
                                 </div>
                             </div>
                             <div
-                                className={`max-w-[80%] rounded-lg p-3 text-sm ${comment.user_id === user?.id
+                                className={`max-w-[80%] p-3 text-sm ${comment.user_id === user?.id
                                     ? 'bg-blue-600 text-white'
                                     : 'bg-white border border-gray-200 text-gray-800'
                                     }`}
@@ -178,9 +178,9 @@ export default function CommentSection({ ticketId }: CommentSectionProps) {
                 <div ref={commentsEndRef} />
             </div>
 
-            <div className="p-4 bg-white border-t border-gray-200 rounded-b-lg">
+            <div className="p-4 bg-white border-t border-gray-200">
                 {submitError && (
-                    <div className="mb-2 text-sm text-red-600 bg-red-50 p-2 rounded border border-red-100">
+                    <div className="mb-2 text-sm text-red-600 bg-red-50 p-2 border border-red-100">
                         {submitError}
                     </div>
                 )}
@@ -196,14 +196,14 @@ export default function CommentSection({ ticketId }: CommentSectionProps) {
                             }
                         }}
                         placeholder="Type a message..."
-                        className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
+                        className="flex-1 px-4 py-2 border border-gray-300 focus:ring-2 focus:ring-blue-500 outline-none"
                         disabled={loading}
                     />
                     <button
                         type="button"
                         onClick={handleSubmit}
                         disabled={loading || !newComment.trim()}
-                        className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 transition-colors"
+                        className="px-4 py-2 bg-blue-600 text-white hover:bg-blue-700 disabled:opacity-50 transition-colors"
                     >
                         <Send size={18} />
                     </button>
