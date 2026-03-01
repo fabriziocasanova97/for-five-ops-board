@@ -7,7 +7,7 @@ import {
     DndContext,
     DragOverlay,
     KeyboardSensor,
-    PointerSensor,
+    MouseSensor,
     useSensor,
     useSensors,
     type DragStartEvent,
@@ -73,7 +73,7 @@ export default function Board() {
     ];
 
     const sensors = useSensors(
-        useSensor(PointerSensor, {
+        useSensor(MouseSensor, {
             activationConstraint: {
                 distance: 5, // Enable click on child elements
             },
@@ -364,7 +364,7 @@ export default function Board() {
                                         </span>
                                     </div>
 
-                                    <div className="flex-1 space-y-3 overflow-y-auto pr-2 custom-scrollbar">
+                                    <div className="flex-1 space-y-3 overflow-y-auto pr-6 md:pr-2 custom-scrollbar">
                                         <SortableContext
                                             items={filteredTickets.filter(t => t.status === col.id).map(t => t.id)}
                                             strategy={verticalListSortingStrategy}
