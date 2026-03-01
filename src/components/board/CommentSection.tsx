@@ -139,9 +139,9 @@ export default function CommentSection({ ticketId }: CommentSectionProps) {
     };
 
     return (
-        <div className="flex flex-col h-[400px] bg-gray-50 border border-gray-200">
-            <div className="p-4 border-b border-gray-200 bg-white">
-                <h4 className="font-semibold text-gray-800">Comments</h4>
+        <div className="flex flex-col h-[400px] bg-white border border-black">
+            <div className="p-4 border-b border-black bg-white">
+                <h4 className="text-sm font-bold text-black uppercase tracking-wide">Comments</h4>
             </div>
 
             <div className="flex-1 overflow-y-auto p-4 space-y-4">
@@ -156,17 +156,17 @@ export default function CommentSection({ ticketId }: CommentSectionProps) {
                             className={`flex gap-3 ${comment.user_id === user?.id ? 'flex-row-reverse' : ''}`}
                         >
                             <div className="flex-shrink-0">
-                                <div className="w-8 h-8 bg-blue-100 flex items-center justify-center text-blue-600">
+                                <div className="w-8 h-8 bg-gray-100 border border-black flex items-center justify-center text-black rounded-none">
                                     <UserIcon size={14} />
                                 </div>
                             </div>
                             <div
-                                className={`max-w-[80%] p-3 text-sm ${comment.user_id === user?.id
-                                    ? 'bg-blue-600 text-white'
-                                    : 'bg-white border border-gray-200 text-gray-800'
+                                className={`max-w-[80%] p-3 text-sm rounded-none border border-black ${comment.user_id === user?.id
+                                    ? 'bg-black text-white'
+                                    : 'bg-white text-gray-900'
                                     }`}
                             >
-                                <div className={`text-xs mb-1 font-medium ${comment.user_id === user?.id ? 'text-blue-200' : 'text-gray-500'
+                                <div className={`text-xs mb-1 font-bold tracking-wide uppercase ${comment.user_id === user?.id ? 'text-gray-400' : 'text-gray-500'
                                     }`}>
                                     {comment.profiles?.full_name || 'Unknown'} • {formatDistanceToNow(new Date(comment.created_at), { addSuffix: true })}
                                 </div>
@@ -196,14 +196,14 @@ export default function CommentSection({ ticketId }: CommentSectionProps) {
                             }
                         }}
                         placeholder="Type a message..."
-                        className="flex-1 px-4 py-2 border border-gray-300 focus:ring-2 focus:ring-blue-500 outline-none"
+                        className="flex-1 px-4 py-2 border border-gray-300 focus:border-black focus:ring-1 focus:ring-black outline-none rounded-none transition-colors"
                         disabled={loading}
                     />
                     <button
                         type="button"
                         onClick={handleSubmit}
                         disabled={loading || !newComment.trim()}
-                        className="px-4 py-2 bg-blue-600 text-white hover:bg-blue-700 disabled:opacity-50 transition-colors"
+                        className="px-4 py-2 bg-black text-white hover:bg-gray-800 border border-black disabled:opacity-50 transition-colors rounded-none"
                     >
                         <Send size={18} />
                     </button>

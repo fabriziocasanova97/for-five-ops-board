@@ -31,7 +31,7 @@ export default function Layout() {
     const isBoardPage = location.pathname === '/';
 
     return (
-        <div className="flex h-screen bg-gray-100">
+        <div className="flex h-screen bg-[#fafafa]">
             {/* Sidebar for Desktop */}
             <aside className="hidden md:flex flex-col w-64 bg-black border-r border-gray-800">
                 <div className="p-8 border-b border-gray-800">
@@ -46,10 +46,10 @@ export default function Layout() {
                             to={item.path}
                             className={({ isActive }) =>
                                 clsx(
-                                    'flex items-center px-4 py-3 text-sm font-medium transition-colors',
+                                    'flex items-center px-4 py-3 text-sm font-medium transition-all duration-200 rounded-lg',
                                     isActive
-                                        ? 'bg-white text-black'
-                                        : 'text-gray-400 hover:bg-gray-900 hover:text-white'
+                                        ? 'bg-white text-black shadow-sm'
+                                        : 'text-gray-400 hover:bg-gray-900 hover:text-white hover:translate-x-1'
                                 )
                             }
                         >
@@ -64,10 +64,10 @@ export default function Layout() {
                         to="/settings"
                         className={({ isActive }) =>
                             clsx(
-                                'flex items-center px-4 py-2 text-sm font-medium transition-colors rounded-md',
+                                'flex items-center px-4 py-2 text-sm font-medium transition-all duration-200 rounded-lg',
                                 isActive
-                                    ? 'bg-white text-black'
-                                    : 'text-gray-400 hover:bg-gray-900 hover:text-white'
+                                    ? 'bg-white text-black shadow-sm'
+                                    : 'text-gray-400 hover:bg-gray-900 hover:text-white hover:translate-x-1'
                             )
                         }
                     >
@@ -134,7 +134,7 @@ export default function Layout() {
                 )}
 
                 {/* Main Content Area */}
-                <main className="flex-1 overflow-auto p-4 md:p-8 bg-gray-50">
+                <main className="flex-1 overflow-auto p-4 md:p-8 bg-[#fafafa]">
                     <Outlet context={{ isMobileMenuOpen, setIsMobileMenuOpen } satisfies LayoutContextType} />
                 </main>
 

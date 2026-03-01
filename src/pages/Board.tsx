@@ -42,6 +42,7 @@ export default function Board() {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [selectedTicket, setSelectedTicket] = useState<Ticket | null>(null);
     const [activeId, setActiveId] = useState<string | null>(null);
+    const [originalStatus, setOriginalStatus] = useState<string | null>(null);
 
     // Filters
     const [showFilters, setShowFilters] = useState(false);
@@ -66,9 +67,9 @@ export default function Board() {
 
     // Columns configuration
     const columns = [
-        { id: 'pending', title: 'Pending', color: 'bg-red-50 border-red-200', titleColor: 'text-red-900' },
-        { id: 'in-progress', title: 'In Progress', color: 'bg-yellow-50 border-yellow-200', titleColor: 'text-yellow-900' },
-        { id: 'resolved', title: 'Resolved', color: 'bg-blue-50 border-blue-200', titleColor: 'text-blue-900' },
+        { id: 'pending', title: 'Pending', color: 'bg-white border-t-[6px] border-t-red-700 border-x-gray-200 border-b-gray-200 shadow-sm', titleColor: 'text-gray-900' },
+        { id: 'in-progress', title: 'In Progress', color: 'bg-white border-t-[6px] border-t-yellow-500 border-x-gray-200 border-b-gray-200 shadow-sm', titleColor: 'text-gray-900' },
+        { id: 'resolved', title: 'Resolved', color: 'bg-white border-t-[6px] border-t-blue-700 border-x-gray-200 border-b-gray-200 shadow-sm', titleColor: 'text-gray-900' },
     ];
 
     const sensors = useSensors(
@@ -87,15 +88,17 @@ export default function Board() {
     }, []);
 
     async function fetchData() {
-        setLoading(true);
+        // setLoading(true); // Don't block UI with loading on background refresh if possible, but keep for now
         try {
+            console.log('Fetching tickets...');
             const [ticketsRes, storesRes] = await Promise.all([
                 supabase
                     .from('tickets')
                     .select(`
                 *,
                 stores (name),
-                profiles (full_name)
+                profiles:profiles!created_by (full_name),
+                assignee:profiles!assigned_to (full_name)
             `)
                     .order('created_at', { ascending: false }),
                 supabase.from('stores').select('id, name').order('name')
@@ -104,6 +107,7 @@ export default function Board() {
             if (ticketsRes.error) throw ticketsRes.error;
             if (storesRes.error) throw storesRes.error;
 
+            console.log('Fetched tickets:', ticketsRes.data?.length, ticketsRes.data);
             setTickets(ticketsRes.data as any || []);
             setStores(storesRes.data || []);
         } catch (error) {
@@ -132,6 +136,10 @@ export default function Board() {
     // Drag and Drop Handlers
     function handleDragStart(event: DragStartEvent) {
         setActiveId(event.active.id as string);
+        const ticket = tickets.find(t => t.id === event.active.id);
+        if (ticket) {
+            setOriginalStatus(ticket.status);
+        }
     }
 
     function handleDragOver(event: DragOverEvent) {
@@ -167,28 +175,40 @@ export default function Board() {
         const { active, over } = event;
         setActiveId(null);
 
-        if (!over) return;
+        if (!over) {
+            setOriginalStatus(null);
+            return;
+        }
 
-        const activeTicket = tickets.find(t => t.id === active.id);
         const overStatus = (tickets.find(t => t.id === over.id)?.status || over.id) as Ticket['status'];
 
-        if (activeTicket && activeTicket.status !== overStatus) {
+        if (originalStatus && originalStatus !== overStatus) {
             // Optimistic update status in DB
-            updateTicketStatus(activeTicket.id, overStatus);
+            updateTicketStatus(active.id as string, overStatus);
         }
+
+        setOriginalStatus(null);
     }
 
     async function updateTicketStatus(ticketId: string, newStatus: string) {
+        console.log(`Updating ticket ${ticketId} to ${newStatus}`);
         try {
-            const { error } = await supabase
+            const { data, error } = await supabase
                 .from('tickets')
                 .update({ status: newStatus })
-                .eq('id', ticketId);
+                .eq('id', ticketId)
+                .select();
 
             if (error) throw error;
+            console.log('Update result:', data);
+
+            if (!data || data.length === 0) {
+                // If RLS blocked it, throw error to trigger revert
+                throw new Error('No rows updated (RLS blockage likely)');
+            }
         } catch (error) {
             console.error('Error updating ticket status:', error);
-            alert('Failed to update ticket status');
+            alert('Failed to update ticket status. You may not have permission.');
             fetchData(); // Revert on error
         }
     }
@@ -376,6 +396,8 @@ export default function Board() {
                     ) : null}
                 </DragOverlay>
             </DndContext>
+
+
 
             <TicketModal
                 isOpen={isModalOpen}
