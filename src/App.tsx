@@ -6,6 +6,8 @@ import Board from './pages/Board';
 
 import Settings from './pages/Settings';
 
+import StoreInventory from './pages/StoreInventory';
+
 // Placeholders
 const MyTickets = () => <div className="p-4">My Tickets Logic Here</div>;
 
@@ -23,6 +25,7 @@ function App() {
 
         <Route element={user ? <Layout /> : <Navigate to="/login" />}>
           <Route path="/" element={<Board />} />
+          <Route path="/inventory" element={<StoreInventory />} />
           <Route path="/my-tickets" element={<MyTickets />} />
           <Route path="/settings" element={<Settings />} />
         </Route>

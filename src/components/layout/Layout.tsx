@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Outlet, NavLink, useNavigate, useLocation } from 'react-router-dom';
-import { LayoutDashboard, Ticket, Settings, LogOut, Menu, X } from 'lucide-react';
+import { LayoutDashboard, Ticket, Settings, LogOut, Menu, X, ClipboardList } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import clsx from 'clsx';
 
@@ -23,6 +23,7 @@ export default function Layout() {
 
     const navItems = [
         { name: 'Board', path: '/', icon: LayoutDashboard },
+        { name: 'Gas Tanks', path: '/inventory', icon: ClipboardList },
         { name: 'My Tickets', path: '/my-tickets', icon: Ticket },
     ];
 
