@@ -77,7 +77,7 @@ export default function GasTanksWidget({ storeId: initialStoreId, stores }: GasT
     const hasChanges = inventoryRecord ? inventoryRecord.quantity !== quantity : quantity !== 0;
 
     return (
-        <div className="bg-white border border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] p-4 flex flex-col md:flex-row items-center gap-4">
+        <div className="bg-white border border-black p-4 flex flex-col md:flex-row items-center gap-4">
             <div className="flex flex-col flex-1 shrink-0 w-full md:w-auto">
                 <span className="text-sm font-bold uppercase tracking-wider text-black">How many empty gas tanks do you have?</span>
                 {inventoryRecord?.last_updated_at ? (

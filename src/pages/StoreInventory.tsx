@@ -3,8 +3,9 @@ import { supabase } from '../lib/supabase';
 import { getAllInventory } from '../lib/api/inventory';
 import { type StoreInventory as StoreInventoryType } from '../types/inventory';
 import { formatDistanceToNow, differenceInHours } from 'date-fns';
-import { RefreshCw, Search, AlertTriangle } from 'lucide-react';
+import { RefreshCw, Search, AlertTriangle, Trash2 } from 'lucide-react';
 import GasTanksWidget from '../components/board/GasTanksWidget';
+import { deleteInventoryRecord } from '../lib/api/inventory';
 
 export default function StoreInventory() {
     const [inventory, setInventory] = useState<StoreInventoryType[]>([]);
@@ -25,6 +26,20 @@ export default function StoreInventory() {
             console.error('Failed to fetch store inventory data:', error);
         } finally {
             setLoading(false);
+        }
+    };
+
+    const handleDelete = async (id: string, storeName: string) => {
+        if (!window.confirm(`Are you sure you want to delete the gas tanks inventory record for ${storeName}?`)) {
+            return;
+        }
+
+        try {
+            await deleteInventoryRecord(id);
+            setInventory(prev => prev.filter(item => item.id !== id));
+        } catch (error) {
+            console.error('Failed to delete record:', error);
+            alert('Failed to delete the inventory record.');
         }
     };
 
@@ -110,6 +125,7 @@ export default function StoreInventory() {
                                     <th scope="col" className="px-6 py-4 text-left text-xs font-bold text-gray-900 uppercase tracking-widest border-b-2 border-black">
                                         Status
                                     </th>
+                                    <th scope="col" className="px-6 py-4 border-b-2 border-black"></th>
                                 </tr>
                             </thead>
                             <tbody className="bg-white divide-y divide-gray-100">
@@ -158,6 +174,15 @@ export default function StoreInventory() {
                                                     ) : (
                                                         <span className="text-gray-400 text-xs font-bold uppercase tracking-wider">OK</span>
                                                     )}
+                                                </td>
+                                                <td className="px-6 py-4 whitespace-nowrap text-right text-sm">
+                                                    <button
+                                                        onClick={() => handleDelete(item.id, item.stores?.name || 'Unknown Store')}
+                                                        className="text-gray-400 hover:text-red-500 transition-colors p-2 hover:bg-red-50 rounded-full"
+                                                        aria-label="Delete record"
+                                                    >
+                                                        <Trash2 className="w-4 h-4" />
+                                                    </button>
                                                 </td>
                                             </tr>
                                         );

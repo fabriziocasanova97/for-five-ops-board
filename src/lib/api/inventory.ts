@@ -73,3 +73,15 @@ export async function updateInventoryQuantity(
 
     return data as StoreInventory;
 }
+
+export async function deleteInventoryRecord(id: string): Promise<void> {
+    const { error } = await supabase
+        .from('store_inventory')
+        .delete()
+        .eq('id', id);
+
+    if (error) {
+        console.error('Error deleting inventory record:', error);
+        throw error;
+    }
+}
