@@ -218,8 +218,8 @@ export default function Board() {
     const [activeTab, setActiveTab] = useState('pending');
 
     return (
-        <div className="h-full flex flex-col">
-            <div className="flex flex-col gap-4 mb-6">
+        <div className="flex-1 overflow-hidden flex flex-col">
+            <div className="flex flex-col gap-4 mb-6 shrink-0">
                 <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
                     {/* ... (Header) ... */}
                     <h2 className="text-2xl font-bold text-gray-800">The Operations Board</h2>
@@ -341,7 +341,7 @@ export default function Board() {
                 onDragOver={handleDragOver}
                 onDragEnd={handleDragEnd}
             >
-                <div className="flex-1 overflow-x-auto pb-24 md:pb-4">
+                <div className="flex-1 min-h-0 overflow-x-auto pb-24 md:pb-4">
                     {loading ? (
                         <div className="flex items-center justify-center h-full">
                             <div className="animate-spin h-12 w-12 border-b-2 border-black"></div>

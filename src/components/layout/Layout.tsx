@@ -135,7 +135,10 @@ export default function Layout() {
                 )}
 
                 {/* Main Content Area */}
-                <main className="flex-1 overflow-auto p-4 md:p-8 bg-[#fafafa]">
+                <main className={clsx(
+                    "flex-1 p-4 md:p-8 bg-[#fafafa]",
+                    isBoardPage ? "overflow-hidden flex flex-col" : "overflow-auto"
+                )}>
                     <Outlet context={{ isMobileMenuOpen, setIsMobileMenuOpen } satisfies LayoutContextType} />
                 </main>
 
