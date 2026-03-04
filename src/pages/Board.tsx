@@ -218,8 +218,8 @@ export default function Board() {
     const [activeTab, setActiveTab] = useState('pending');
 
     return (
-        <div className="flex-1 overflow-hidden flex flex-col">
-            <div className="flex flex-col gap-4 mb-6 shrink-0">
+        <div className="flex flex-col h-[calc(100vh-80px)] md:h-full overflow-hidden">
+            <div className="flex flex-col gap-4 mb-3 md:mb-6 shrink-0">
                 <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
                     {/* ... (Header) ... */}
                     <h2 className="text-2xl font-bold text-gray-800">The Operations Board</h2>
@@ -341,7 +341,7 @@ export default function Board() {
                 onDragOver={handleDragOver}
                 onDragEnd={handleDragEnd}
             >
-                <div className="flex-1 min-h-0 overflow-x-auto pb-24 md:pb-4">
+                <div className="flex-1 min-h-0 overflow-x-auto pb-6 md:pb-4 relative">
                     {loading ? (
                         <div className="flex items-center justify-center h-full">
                             <div className="animate-spin h-12 w-12 border-b-2 border-black"></div>
@@ -366,7 +366,7 @@ export default function Board() {
 
                                     <div className="relative flex-1 min-h-0 flex flex-col">
                                         {/* The scrollable area */}
-                                        <div className="flex-1 space-y-3 overflow-y-auto pr-6 md:pr-2 custom-scrollbar pb-10">
+                                        <div className="flex-1 space-y-3 overflow-y-auto pr-6 md:pr-2 custom-scrollbar pb-[100px] md:pb-10">
                                             <SortableContext
                                                 items={filteredTickets.filter(t => t.status === col.id).map(t => t.id)}
                                                 strategy={verticalListSortingStrategy}
