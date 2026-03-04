@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { supabase } from '../lib/supabase';
-import { Plus, Filter, X, Menu } from 'lucide-react';
+import { Plus, Filter, X, Menu, ChevronDown } from 'lucide-react';
 import TicketCard, { type Ticket } from '../components/board/TicketCard';
 import TicketModal from '../components/board/TicketModal';
 import {
@@ -355,30 +355,43 @@ export default function Board() {
                                     className={`flex-1 flex flex-col border ${col.color} p-4 ${activeTab === col.id ? 'flex' : 'hidden md:flex'
                                         }`}
                                 >
-                                    <div className="flex items-center justify-between mb-4">
+                                    <div className="flex items-center justify-between mb-4 shrink-0">
                                         <h3 className={`font-semibold uppercase tracking-wider text-sm ${col.titleColor}`}>
                                             {col.title}
                                         </h3>
-                                        <span className="bg-white/50 px-2 py-1 text-xs font-medium text-gray-800">
+                                        <span className="bg-white/50 px-2 py-1 text-xs font-medium text-gray-800 rounded-sm shadow-sm border border-gray-100">
                                             {filteredTickets.filter(t => t.status === col.id).length}
                                         </span>
                                     </div>
 
-                                    <div className="flex-1 space-y-3 overflow-y-auto pr-6 md:pr-2 custom-scrollbar">
-                                        <SortableContext
-                                            items={filteredTickets.filter(t => t.status === col.id).map(t => t.id)}
-                                            strategy={verticalListSortingStrategy}
-                                        >
-                                            {filteredTickets
-                                                .filter((t) => t.status === col.id)
-                                                .map((ticket) => (
-                                                    <SortableTicket
-                                                        key={ticket.id}
-                                                        ticket={ticket}
-                                                        onClick={handleTicketClick}
-                                                    />
-                                                ))}
-                                        </SortableContext>
+                                    <div className="relative flex-1 min-h-0 flex flex-col">
+                                        {/* The scrollable area */}
+                                        <div className="flex-1 space-y-3 overflow-y-auto pr-6 md:pr-2 custom-scrollbar pb-10">
+                                            <SortableContext
+                                                items={filteredTickets.filter(t => t.status === col.id).map(t => t.id)}
+                                                strategy={verticalListSortingStrategy}
+                                            >
+                                                {filteredTickets
+                                                    .filter((t) => t.status === col.id)
+                                                    .map((ticket) => (
+                                                        <SortableTicket
+                                                            key={ticket.id}
+                                                            ticket={ticket}
+                                                            onClick={handleTicketClick}
+                                                        />
+                                                    ))}
+                                            </SortableContext>
+                                        </div>
+
+                                        {/* Mobile scroll visual indicator (only if there are 3+ tickets) */}
+                                        {filteredTickets.filter(t => t.status === col.id).length > 2 && (
+                                            <div className="md:hidden absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-white via-white/80 to-transparent pointer-events-none flex flex-col justify-end items-center pb-2">
+                                                <div className="flex items-center gap-1.5 px-3 py-1.5 bg-black/5 backdrop-blur-sm rounded-full shadow-[0_2px_8px_-2px_rgba(0,0,0,0.1)] border border-black/10 text-[10px] font-bold text-gray-600 uppercase tracking-widest animate-bounce">
+                                                    Scroll
+                                                    <ChevronDown className="w-3.5 h-3.5" />
+                                                </div>
+                                            </div>
+                                        )}
                                     </div>
                                 </DroppableColumn>
                             ))}
