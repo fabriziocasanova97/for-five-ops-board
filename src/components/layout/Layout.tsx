@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Outlet, NavLink, useNavigate, useLocation } from 'react-router-dom';
 import { LayoutDashboard, Ticket, Settings, LogOut, Menu, X, ClipboardList } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
@@ -30,6 +30,28 @@ export default function Layout() {
     // Link to Settings is handled in the footer now
 
     const isBoardPage = location.pathname === '/';
+
+    // Force body to not scroll when on the board page (critical for mobile safari/chrome)
+    useEffect(() => {
+        if (isBoardPage) {
+            document.body.style.overflow = 'hidden';
+            document.body.style.position = 'fixed'; // Prevents iOS bounce
+            document.body.style.width = '100%';
+            document.body.style.height = '100%';
+        } else {
+            document.body.style.overflow = '';
+            document.body.style.position = '';
+            document.body.style.width = '';
+            document.body.style.height = '';
+        }
+
+        return () => {
+            document.body.style.overflow = '';
+            document.body.style.position = '';
+            document.body.style.width = '';
+            document.body.style.height = '';
+        };
+    }, [isBoardPage]);
 
     return (
         <div className="flex h-screen bg-[#fafafa]">
