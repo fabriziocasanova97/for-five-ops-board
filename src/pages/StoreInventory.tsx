@@ -3,7 +3,7 @@ import { supabase } from '../lib/supabase';
 import { getAllInventory } from '../lib/api/inventory';
 import { type StoreInventory as StoreInventoryType } from '../types/inventory';
 import { formatDistanceToNow, differenceInHours } from 'date-fns';
-import { RefreshCw, Search, AlertTriangle, Trash2 } from 'lucide-react';
+import { AlertTriangle, Trash2 } from 'lucide-react';
 import GasTanksWidget from '../components/board/GasTanksWidget';
 import { deleteInventoryRecord } from '../lib/api/inventory';
 
@@ -11,7 +11,6 @@ export default function StoreInventory() {
     const [inventory, setInventory] = useState<StoreInventoryType[]>([]);
     const [stores, setStores] = useState<{ id: string; name: string }[]>([]);
     const [loading, setLoading] = useState(true);
-    const [searchQuery, setSearchQuery] = useState('');
 
     const fetchData = async () => {
         setLoading(true);
@@ -47,11 +46,6 @@ export default function StoreInventory() {
         fetchData();
     }, []);
 
-    const filteredInventory = inventory.filter(item => {
-        if (!searchQuery) return true;
-        return item.stores?.name?.toLowerCase().includes(searchQuery.toLowerCase());
-    });
-
     const getStatusStyles = (item: StoreInventoryType) => {
         const hoursSinceUpdate = differenceInHours(new Date(), new Date(item.last_updated_at));
         const isLowStock = item.quantity < 2;
@@ -73,27 +67,6 @@ export default function StoreInventory() {
                     <h2 className="text-2xl font-bold text-gray-800 tracking-tight">Gas Tanks</h2>
                     <p className="text-sm text-gray-500 mt-1">Bird's-eye view of all location stock levels.</p>
                 </div>
-
-                <div className="flex items-center gap-3 w-full md:w-auto">
-                    <div className="relative flex-1 md:w-64">
-                        <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
-                        <input
-                            type="text"
-                            placeholder="Find a store..."
-                            value={searchQuery}
-                            onChange={(e) => setSearchQuery(e.target.value)}
-                            className="w-full pl-9 pr-4 py-2 text-sm border-2 border-black focus:ring-2 focus:ring-black bg-white shadow-sm outline-none transition-all"
-                        />
-                    </div>
-                    <button
-                        onClick={fetchData}
-                        disabled={loading}
-                        className="p-2 bg-black text-white hover:-translate-y-0.5 shadow-[2px_2px_0px_0px_rgba(0,0,0,0.3)] active:translate-y-0 active:shadow-none transition-all disabled:opacity-50"
-                        title="Refresh Data"
-                    >
-                        <RefreshCw className={`w-5 h-5 ${loading ? 'animate-spin' : ''}`} />
-                    </button>
-                </div>
             </div>
 
             <div className="mb-6 w-full max-w-2xl">
@@ -113,9 +86,6 @@ export default function StoreInventory() {
                                     <th scope="col" className="px-6 py-4 text-left text-xs font-bold text-gray-900 uppercase tracking-widest border-b-2 border-black">
                                         Store
                                     </th>
-                                    <th scope="col" className="px-6 py-4 text-left text-xs font-bold text-gray-900 uppercase tracking-widest border-b-2 border-black">
-                                        Item
-                                    </th>
                                     <th scope="col" className="px-6 py-4 text-right text-xs font-bold text-gray-900 uppercase tracking-widest border-b-2 border-black">
                                         Quantity
                                     </th>
@@ -129,14 +99,14 @@ export default function StoreInventory() {
                                 </tr>
                             </thead>
                             <tbody className="bg-white divide-y divide-gray-100">
-                                {filteredInventory.length === 0 ? (
+                                {inventory.length === 0 ? (
                                     <tr>
                                         <td colSpan={5} className="px-6 py-12 text-center text-gray-500 text-sm">
                                             No inventory records found. Add them using the Gas Tanks Widget on the main board.
                                         </td>
                                     </tr>
                                 ) : (
-                                    filteredInventory.map((item) => {
+                                    inventory.map((item) => {
                                         const isLowStock = item.quantity < 2;
                                         const needsUpdate = differenceInHours(new Date(), new Date(item.last_updated_at)) > 48;
                                         const statusClasses = getStatusStyles(item);
@@ -145,9 +115,6 @@ export default function StoreInventory() {
                                             <tr key={item.id} className={`${statusClasses} transition-colors group hover:bg-gray-50`}>
                                                 <td className="px-6 py-4 whitespace-nowrap text-sm font-bold text-gray-900">
                                                     {item.stores?.name || 'Unknown Store'}
-                                                </td>
-                                                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700 font-medium">
-                                                    {item.item_type}
                                                 </td>
                                                 <td className="px-6 py-4 whitespace-nowrap text-sm text-right">
                                                     <span className={`inline-flex items-center justify-center px-2.5 py-1 min-w-[32px] rounded-sm font-bold border ${isLowStock ? 'bg-red-600 text-white border-red-700' : 'bg-gray-100 text-gray-900 border-gray-300'}`}>

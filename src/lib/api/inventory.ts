@@ -9,8 +9,7 @@ export async function getInventoryByStore(storeId: string): Promise<StoreInvento
             stores (name),
             profiles (full_name)
         `)
-        .eq('store_id', storeId)
-        .order('item_type');
+        .eq('store_id', storeId);
 
     if (error) {
         console.error('Error fetching inventory for store:', error);
@@ -28,8 +27,7 @@ export async function getAllInventory(): Promise<StoreInventory[]> {
             stores (name),
             profiles (full_name)
         `)
-        .order('store_id')
-        .order('item_type');
+        .order('store_id');
 
     if (error) {
         console.error('Error fetching all inventory:', error);
@@ -41,7 +39,6 @@ export async function getAllInventory(): Promise<StoreInventory[]> {
 
 export async function updateInventoryQuantity(
     storeId: string,
-    itemType: string,
     quantity: number,
     userId: string
 ): Promise<StoreInventory> {
@@ -50,13 +47,12 @@ export async function updateInventoryQuantity(
         .upsert(
             {
                 store_id: storeId,
-                item_type: itemType,
                 quantity: quantity,
                 last_updated_by: userId,
                 last_updated_at: new Date().toISOString()
             },
             {
-                onConflict: 'store_id,item_type'
+                onConflict: 'store_id'
             }
         )
         .select(`

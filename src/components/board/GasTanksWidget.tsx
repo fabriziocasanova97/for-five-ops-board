@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { getInventoryByStore, updateInventoryQuantity } from '../../lib/api/inventory';
 import { type StoreInventory } from '../../types/inventory';
 import { useAuth } from '../../context/AuthContext';
-import { Minus, Plus, RefreshCw } from 'lucide-react';
+import { Minus, Plus, RefreshCw, ChevronDown } from 'lucide-react';
 import { formatDistanceToNow } from 'date-fns';
 
 interface GasTanksWidgetProps {
@@ -37,7 +37,7 @@ export default function GasTanksWidget({ storeId: initialStoreId, stores }: GasT
             setLoading(true);
             try {
                 const data = await getInventoryByStore(selectedStoreId);
-                const gasTankRecord = data.find(item => item.item_type === 'Gas Tank');
+                const gasTankRecord = data[0]; // Assuming one record per store now
                 if (gasTankRecord) {
                     setInventoryRecord(gasTankRecord);
                     setQuantity(gasTankRecord.quantity);
@@ -61,7 +61,6 @@ export default function GasTanksWidget({ storeId: initialStoreId, stores }: GasT
         try {
             const updatedRecord = await updateInventoryQuantity(
                 selectedStoreId,
-                'Gas Tank',
                 quantity,
                 user.id
             );
@@ -91,17 +90,20 @@ export default function GasTanksWidget({ storeId: initialStoreId, stores }: GasT
             </div>
 
             <div className="flex-1 w-full md:w-auto">
-                {stores.length > 1 && !initialStoreId ? (
-                    <select
-                        value={selectedStoreId}
-                        onChange={(e) => setSelectedStoreId(e.target.value)}
-                        className="w-full text-sm font-medium border-b-2 border-transparent hover:border-black focus:border-black focus:outline-none py-1 transition-colors bg-white cursor-pointer"
-                    >
-                        <option value="" disabled>Select a store</option>
-                        {stores.map(s => (
-                            <option key={s.id} value={s.id}>{s.name}</option>
-                        ))}
-                    </select>
+                {!initialStoreId ? (
+                    <div className="relative">
+                        <select
+                            value={selectedStoreId}
+                            onChange={(e) => setSelectedStoreId(e.target.value)}
+                            className="w-full px-4 py-3 text-base font-medium text-black border border-gray-300 hover:border-black focus:border-black focus:ring-1 focus:ring-black outline-none bg-white appearance-none pr-10 rounded-sm transition-colors cursor-pointer"
+                        >
+                            <option value="" disabled>Select a store</option>
+                            {stores.map(s => (
+                                <option key={s.id} value={s.id}>{s.name}</option>
+                            ))}
+                        </select>
+                        <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-600 pointer-events-none" />
+                    </div>
                 ) : (
                     <div className="text-sm font-medium text-gray-800">
                         {stores.find(s => s.id === selectedStoreId)?.name || 'Select a store...'}
